@@ -6,5 +6,10 @@
     <param name="lomax" value="-2.0" />
     <param name="lamax" value="52.0" />
   </node>
+  <node pkg="airtraffic" exec="range_rings" name="range_rings">
+    <param name="ctr_lon" value="-2.5" />
+    <param name="ctr_lat" value="51.5" />
+    <param name="ring_list" value="[1852.0, 3704.0, 5556.0]" />
+  </node>
   <node pkg="foxglove_bridge" exec="foxglove_bridge" name="foxglove_bridge" />
 </launch>
