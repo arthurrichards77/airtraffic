@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="airtraffic" exec="opensky" name="opensky" />
+  <node pkg="foxglove_bridge" exec="foxglove_bridge" name="foxglove_bridge" />
+</launch>
