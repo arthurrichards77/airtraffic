@@ -27,7 +27,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'opensky = airtraffic.opensky:main'
+            'opensky = airtraffic.opensky:main',
+            'range_rings = airtraffic.range_rings:main'
         ],
     },
 )
