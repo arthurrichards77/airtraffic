@@ -90,18 +90,25 @@ class OpenskyPublisher(Node):
 
     def __init__(self, osky_client):
         super().__init__('opensky_publisher')
+        self.declare_parameter('lomin', -0.6)
+        self.declare_parameter('lamin', 51.2)
+        self.declare_parameter('lomax', -0.3)
+        self.declare_parameter('lamax', 51.6)
         self.publisher_ = self.create_publisher(GeoJSON, 'opensky', 10)
         self.osky_client = osky_client
         timer_period = 2.0  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
-        gdf_osky = self.osky_client.fetch_states(-0.6,51.2,-0.3,51.6)
+        gdf_osky = self.osky_client.fetch_states(self.get_parameter('lomin').get_parameter_value().double_value,
+                                                 self.get_parameter('lamin').get_parameter_value().double_value,
+                                                 self.get_parameter('lomax').get_parameter_value().double_value,
+                                                 self.get_parameter('lamax').get_parameter_value().double_value,)
         gdf_osky['metadata'] = [{'alt': str(r['geoaltitude'])} for _,r in gdf_osky.iterrows()]
         msg = GeoJSON()
         msg.geojson = gdf_osky.rename(columns={'callsign':'name'}).to_json()
         self.publisher_.publish(msg)
-        self.get_logger().info('Publishing: "%s"' % msg.geojson)
+        self.get_logger().debug('Publishing: "%s"' % msg.geojson)
 
 def main(args=None):
     rclpy.init(args=args)
