@@ -3,7 +3,7 @@ FROM ros:humble-ros-base
 WORKDIR /ros_ws/src
 
 RUN apt-get update \
-    && apt-get install -y python3-pip ros-humble-foxglove-msgs
+    && apt-get install -y python3-pip ros-humble-foxglove-msgs ros-humble-foxglove-bridge
 
 # ought to be able to specify Python dependencies through rosdep, but can't get it to work
 RUN python3 -m pip install requests geopandas
