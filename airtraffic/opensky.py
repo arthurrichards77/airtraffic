@@ -86,16 +86,36 @@ class OpenskyLiveClient():
         df_state_vectors = self.convert_json_to_df(resp_json)
         return self.add_geometry_to_df(df_state_vectors)
 
+CRED_ENV_VAR = 'CREDENTIALS_FILE'
+
 class OpenskyPublisher(Node):
 
-    def __init__(self, osky_client):
+    def __init__(self):
         super().__init__('opensky_publisher')
+        # get credentials
+        self.declare_parameter('credentials_file', 'NULL')
+        cred_param = self.get_parameter('credentials_file').get_parameter_value().string_value
+        if CRED_ENV_VAR in os.environ:
+            cred_file = os.environ[CRED_ENV_VAR]
+            self.get_logger().info(f'Using credentials file {cred_file} from env {CRED_ENV_VAR}')
+        elif cred_param != 'NULL':
+            cred_file = cred_param
+            self.get_logger().info(f'Using credentials file {cred_file} from ROS2 parameter')
+        else:
+            cred_file = '~/credentials.json'
+            self.get_logger().info(f'Using default credentials file {cred_file}')
+        full_path = os.path.expanduser(cred_file)
+        self.get_logger().info(f'Looking for credentials in {full_path}')
+        with open(full_path,'r',encoding='utf-8') as f:
+            credentials = json.load(f)
+        self.osky_client = OpenskyLiveClient(credentials['opensky_live'])
+        # get desired range
         self.declare_parameter('lomin', -0.6)
         self.declare_parameter('lamin', 51.2)
         self.declare_parameter('lomax', -0.3)
         self.declare_parameter('lamax', 51.6)
         self.publisher_ = self.create_publisher(GeoJSON, 'opensky', 10)
-        self.osky_client = osky_client
+        # publish every N seconds
         timer_period = 2.0  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -112,13 +132,7 @@ class OpenskyPublisher(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    # load credentials and initialise client
-    full_path = os.path.expanduser('~/credentials.json')
-    print(f'Looking for credentials in {full_path}')
-    with open(full_path,'r',encoding='utf-8') as f:
-        credentials = json.load(f)
-    osky_live = OpenskyLiveClient(credentials['opensky_live'])
-    opensky_publisher = OpenskyPublisher(osky_client=osky_live)
+    opensky_publisher = OpenskyPublisher()
     rclpy.spin(opensky_publisher)
     # Destroy the node explicitly
     opensky_publisher.destroy_node()
