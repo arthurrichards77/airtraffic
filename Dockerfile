@@ -31,4 +31,4 @@ RUN echo '#!/bin/bash' > /my_entrypoint.sh \
 
 ENTRYPOINT ["/my_entrypoint.sh"]
 
-CMD [ "ros2", "launch", "airtraffic", "bristol.launch.xml" ]
+CMD [ "ros2", "launch", "airtraffic", "llanbedr.launch.xml" ]

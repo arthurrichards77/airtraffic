@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="airtraffic" exec="opensky" name="opensky">
+    <param name="lomin" value="-5.0" />
+    <param name="lamin" value="52.5" />
+    <param name="lomax" value="-3.0" />
+    <param name="lamax" value="53.5" />
+  </node>
+  <node pkg="airtraffic" exec="range_rings" name="range_rings">
+    <param name="ctr_lon" value="-4.127222" />
+    <param name="ctr_lat" value="52.805" />
+    <param name="ring_list" value="[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0]" />
+    <param name="ring_unit" value="NM" />
+  </node>
+  <node pkg="airtraffic" exec="publish_kml" name="flightvolume">
+    <param name="kml_file" value="$(find-pkg-share airtraffic)/kml/flight_volume_3d.kml" />
+    <remap from="kml_layer" to="flight_volume" />
+  </node>
+  <node pkg="airtraffic" exec="publish_kml" name="contingencyvolume">
+    <param name="kml_file" value="$(find-pkg-share airtraffic)/kml/contingency_volume_3d.kml" />
+    <remap from="kml_layer" to="contingency_volume" />
+  </node>
+  <node pkg="foxglove_bridge" exec="foxglove_bridge" name="foxglove_bridge" />
+</launch>

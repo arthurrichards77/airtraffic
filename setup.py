@@ -12,7 +12,9 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*'))
+        (os.path.join('share', package_name, 'launch'), glob('launch/*')),
+        (os.path.join('share', package_name, 'kml'), glob('kml/*'))
+
     ],
     install_requires=['setuptools',
                       'geopandas',
@@ -30,7 +32,8 @@ setup(
     entry_points={
         'console_scripts': [
             'opensky = airtraffic.opensky:main',
-            'range_rings = airtraffic.range_rings:main'
+            'range_rings = airtraffic.range_rings:main',
+            'publish_kml = airtraffic.publish_kml:main'
         ],
     },
 )
