@@ -1,0 +1,22 @@
+name: airtraffic-bristol
+
+services:
+
+  airtraffic:
+    build: .
+    secrets:
+      - credentials
+    environment:
+      - CREDENTIALS_FILE=/run/secrets/credentials
+    ports:
+      - 8765:8765
+    command: [ "ros2", "launch", "airtraffic", "bristol.launch.xml" ]
+
+#  foxglove-bridge:
+#    image: us-central1-docker.pkg.dev/foxglove-images/images/foxglove_bridge:ros-humble-v3.5.0
+#    ports:
+#      - 8765:8765
+
+secrets:
+  credentials:
+    file: ./credentials.json
