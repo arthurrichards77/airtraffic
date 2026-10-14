@@ -15,6 +15,7 @@ class Port30003Publisher(Node):
             while True:
                 data_str = s.recv(4096).decode('utf-8')
                 msg_list = data_str.split('\r\n')
+                msg_list = [m for m in msg_list if len(m)>0]
                 print(f'Got {len(msg_list)} messages')
                 print(msg_list)
                 for msg in msg_list:
