@@ -33,7 +33,8 @@ setup(
         'console_scripts': [
             'opensky = airtraffic.opensky:main',
             'range_rings = airtraffic.range_rings:main',
-            'publish_kml = airtraffic.publish_kml:main'
+            'publish_kml = airtraffic.publish_kml:main',
+            'port30003 = airtraffic.port30003:main'
         ],
     },
 )

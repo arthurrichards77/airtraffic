@@ -2,12 +2,14 @@ from warnings import warn
 import json
 import requests
 import geopandas as gpd
+import fiona
 from shapely.geometry import Point
 import os
 import rclpy
 from rclpy.node import Node
 from foxglove_msgs.msg import GeoJSON
-    
+  
+fiona.drvsupport.supported_drivers['KML'] = 'r'  
 
 class KMLPublisher(Node):
 
@@ -17,7 +19,7 @@ class KMLPublisher(Node):
         self.publisher_ = self.create_publisher(GeoJSON, 'kml_layer', 10)
         filename = self.get_parameter('kml_file').get_parameter_value().string_value
         self.get_logger().info(f"Opening {filename}")
-        gdf_kml = gpd.read_file(filename=filename)
+        gdf_kml = gpd.read_file(filename=filename, driver='KML')
         self.msg = GeoJSON()
         self.msg.geojson = gdf_kml.to_json()
         timer_period = 1.0  # seconds
