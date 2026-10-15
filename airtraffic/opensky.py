@@ -116,7 +116,7 @@ class OpenskyPublisher(Node):
         self.declare_parameter('lamax', 51.6)
         self.publisher_ = self.create_publisher(GeoJSON, 'opensky', 10)
         # publish every N seconds
-        timer_period = 2.0  # seconds
+        timer_period = 5.0  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
     def timer_callback(self):
@@ -124,6 +124,7 @@ class OpenskyPublisher(Node):
                                                  self.get_parameter('lamin').get_parameter_value().double_value,
                                                  self.get_parameter('lomax').get_parameter_value().double_value,
                                                  self.get_parameter('lamax').get_parameter_value().double_value,)
+        self.get_logger().info(f'Got {len(gdf_osky)} records.  {self.osky_client.calls_remaining} API calls remaining.')
         gdf_osky['metadata'] = [{'alt': str(r['geoaltitude'])} for _,r in gdf_osky.iterrows()]
         msg = GeoJSON()
         msg.geojson = gdf_osky.rename(columns={'callsign':'name'}).to_json()
