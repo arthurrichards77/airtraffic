@@ -12,5 +12,7 @@
     <param name="ring_list" value="[1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0]" />
     <param name="ring_unit" value="NM" />
   </node>
+  <node pkg="airtraffic" exec="port30003" name="port30003" respawn="true" />
+  <executable cmd="dump1090-mutability --net" cwd="$(env HOME)" />
   <node pkg="foxglove_bridge" exec="foxglove_bridge" name="foxglove_bridge" />
 </launch>
